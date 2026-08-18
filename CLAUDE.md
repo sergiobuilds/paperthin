@@ -106,11 +106,11 @@ An external contribution lands on a `land/pr-<n>` branch (a range only for a rea
    - credit each external change inline (`(#123, @handle)`); skill names in backticks;
    - nothing the tag or version already proves, and no narration of anything meant to stay silent.
 3. Tag: `git tag -s vX.Y.Z -F .re0/release/RELEASE_NOTES.local.md --cleanup=verbatim`.
-4. Push `main` and the tag — the only manual remote step; it triggers [`release.yml`](./.github/workflows/release.yml): validate, verify `package.json` matches the tag, `npm publish --provenance`, create the GitHub Release from the tag message.
+4. Push `main` and the tag — **the entire manual step**; it triggers [`release.yml`](./.github/workflows/release.yml): validate, verify `package.json` matches the tag, `npm publish --provenance`, title the GitHub Release from the tag. Never run one of those by hand, least of all to rescue a failed run: a hand-run step drops what the workflow adds beyond the artifact — the provenance attestation, the title convention — while still looking like a good release. If the run fails, fix the cause and re-run it, or roll the version forward.
 5. On success, close each landed contribution with a credit comment pointing at the release — the acceptance approval already recorded it as accepted. Any maintainer with review access does this.
 6. Retire the shipped cycle's folder into `.re0/iteration/completed/` — `re0-release` does this; by hand only if running the checklist manually.
 
-No build step: the package ships the repo as-is via `.gitignore` from the clean CI checkout. Never `npm publish` from a dirty worktree, and never add an `.npmignore` — it would publish the `*.local` docs.
+No build step: the package ships the repo as-is via `.gitignore` from the clean CI checkout — which is why publishing is CI's alone (step 4). Never add an `.npmignore`; it would publish the `*.local` docs.
 
 ## Vendoring
 
